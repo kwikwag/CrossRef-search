@@ -9,7 +9,6 @@ import {fade} from '@material-ui/core/styles/colorManipulator';
 import {withStyles} from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import $ from 'jquery'
 
 const styles = theme => ({
     root: {
@@ -71,32 +70,32 @@ const styles = theme => ({
     },
 });
 
-class SearchAppBar extends Component {
+class Nav extends Component {
+
+    state = {
+        inputVal: ''
+    };
+
+    constructor(props) {
+        super(props);
+        console.log(props);
+        this.handleKeyUp = this.handleKeyUp.bind(this)
+    }
+
+    handleChange = (e) => {
+        let inputVal = e.target.value;
+        this.setState({inputVal});
+    };
+
     handleKeyUp = (e) => {
+        //Submit on ENTER
         if (e.nativeEvent.keyCode === 13) {
-            let query = e.target.value
-            if (!query || this.lastQuery === query) {
-                return;
+            let query = e.target.value;
+            if (query && this.lastQuery !== query) {
+                this.lastQuery = query;
+                this.props.onSubmit(query)
             }
-            this.lastQuery = query;
-            let escapedQuery = encodeURIComponent(query.replace(/\s+$/, "").replace(/^\s+/, ""));
-
-
-            let url = "https://api.crossref.org/works?query.bibliographic=" + escapedQuery + "&filter=type:journal-article&rows=5";
-
-            let crossrefPromise = $.ajax({
-                type: "GET",
-                url: url,
-                // processData: false
-            }).then((res) => {
-                debugger
-            }, (err) => {
-                debugger
-            });
-
         }
-
-
     };
 
     render() {
@@ -124,6 +123,8 @@ class SearchAppBar extends Component {
                                     input: classes.inputInput,
                                 }}
                                 onKeyUp={this.handleKeyUp}
+                                onChange={this.handleChange}
+                                value={this.state.inputVal}
                             />
                         </div>
                     </Toolbar>
@@ -133,8 +134,9 @@ class SearchAppBar extends Component {
     }
 }
 
-SearchAppBar.propTypes = {
+Nav.propTypes = {
     classes: PropTypes.object.isRequired,
+    onSubmit: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(SearchAppBar);
+export default withStyles(styles)(Nav);
