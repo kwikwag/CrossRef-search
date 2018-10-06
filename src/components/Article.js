@@ -32,8 +32,8 @@ class Article extends Component {
                             {this.props.article.year} {this.props.article.journal} {this.props.article.locator.join(", ")}
                         </Typography>
                         <Typography component="p">
-                            <div>{this.props.article.authors}</div>
-                            <div>DOI: <a target="_blank" href={this.props.article.url}>{this.props.article.doi}</a></div>
+                            {this.props.article.authors}
+                            DOI: <a target="_blank" href={this.props.article.url}>{this.props.article.doi}</a>
                         </Typography>
                     </CardContent>
                 </CardActionArea>

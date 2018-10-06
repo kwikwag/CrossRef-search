@@ -19,7 +19,7 @@ function ArticlesList(props) {
     let listItems = props.articles.map((article) => {
         let parsedArticle = dataParser.parseArticle(article);
         return (<Article key={parsedArticle.doi} article={parsedArticle}/>)
-    })
+    });
 
     return (
         <div className={classes.root}>
