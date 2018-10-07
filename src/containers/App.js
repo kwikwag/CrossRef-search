@@ -19,7 +19,7 @@ class App extends Component {
         if (!extraParams.facets) extraParams.facets = {
             published: 5,
             'container-title': 5,
-            affiliation: 5
+            'type-name': 5
         };
 
         $.ajax({
@@ -55,11 +55,12 @@ class App extends Component {
 
             let filtersQuery = '&filter=';
             _.each(extraParams.filters, (filterValues, facetName) => {
-                // filtersQuery = filtersQuery + filterName + ':' + filterVal + ','
                 _.each(filterValues, (isActive, filterName) => {
                     if (isActive) {
                         if (facetName === 'published') {
                             filtersQuery = filtersQuery + 'from-pub-date:' + filterName + '-01-01,until-pub-date:' + filterName + '-12-31,'
+                        } else if (facetName === 'type-name') {
+                            filtersQuery = filtersQuery + 'type:' + filterName.toLowerCase().replace(' ', '-') + ','
                         } else {
                             filtersQuery = filtersQuery + facetName + ':' + filterName + ','
                         }

@@ -27,8 +27,7 @@ class CheckboxLabels extends React.Component {
                         color="primary"
                     />
                 }
-                label={<span>{this.props.label}
-                    <Typography style={{display: 'inline-block'}} component='span' color="textSecondary" variant='caption'>- ({this.props.count})</Typography></span>}
+                label={<span>{this.props.label} <Typography style={{display: 'inline-block'}} component='span' color="textSecondary" variant='caption'>- ({this.props.count})</Typography></span>}
             />
         );
     }

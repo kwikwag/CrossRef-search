@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Input from '@material-ui/core/Input';
 import {fade} from '@material-ui/core/styles/colorManipulator';
 import {withStyles} from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import FacetsList from "./FacetsList";
 
@@ -46,7 +45,6 @@ const styles = theme => ({
         width: theme.spacing.unit * 9,
         height: '100%',
         position: 'absolute',
-        pointerEvents: 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -63,9 +61,9 @@ const styles = theme => ({
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            width: 120,
+            width: 450,
             '&:focus': {
-                width: 200,
+                width: 550,
             },
         },
     },
@@ -102,23 +100,24 @@ class Search extends Component {
         }
     };
 
+    search = () => {
+        this.state.inputVal && this.props.onSubmit(this.state.inputVal, {filters: this.state.activeFilters})
+    };
+
     render() {
         const classes = this.props.classes;
         return (
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
-                            <MenuIcon/>
-                        </IconButton>
                         <Typography className={classes.title} variant="title" color="inherit" noWrap>
-                            Material-UI
+                            CrossRef search
                         </Typography>
                         <div className={classes.grow}/>
                         <div className={classes.search}>
-                            <div className={classes.searchIcon}>
+                            <IconButton onClick={this.search} className={classes.searchIcon}>
                                 <SearchIcon/>
-                            </div>
+                            </IconButton>
                             <Input
                                 placeholder="Search…"
                                 disableUnderline
@@ -130,7 +129,9 @@ class Search extends Component {
                                 onChange={this.handleChange}
                                 value={this.state.inputVal}
                             />
+
                         </div>
+                        <div className={classes.grow}/>
                     </Toolbar>
                 </AppBar>
                 <FacetsList facets={this.props.facets} setFilter={this.setFilter}/>

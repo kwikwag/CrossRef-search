@@ -33,7 +33,10 @@ class Article extends Component {
                         </Typography>
                         <Typography component="p">
                             {this.props.article.authors}
-                            DOI: <a target="_blank" href={this.props.article.url}>{this.props.article.doi}</a>
+                            <br/>
+                            DOI:
+                            <br/>
+                            <a target="_blank" href={this.props.article.url}>{this.props.article.doi}</a>
                         </Typography>
                     </CardContent>
                 </CardActionArea>
