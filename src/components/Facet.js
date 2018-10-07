@@ -21,24 +21,25 @@ const styles = {
 class Facet extends React.Component {
 
     state = {
-        activeFilters: {}
+        filterValues: {}
     };
 
-    handleChange = key => event => {
-        let newState = {...this.state.activeFilters};
-        newState[key] = event.target.checked;
-        this.setState(newState);
+    toggleFilter = (key, checked) => {
+        let filterValues = {...this.state.filterValues};
+        filterValues[key] = checked;
+        this.props.setFilter(this.props.name, filterValues)
+        this.setState({filterValues});
     };
 
     render() {
         let filters = _.map(this.props.filters.values, (val, key) => {
-            return (<CheckboxLabel label={key} key={key} count={val} checked={this.state.activeFilters[key]} onChange={this.handleChange(key)}/>)
+            return (<CheckboxLabel label={key} key={key} count={val} checked={this.state.filterValues[key]} onChange={this.toggleFilter}/>)
         })
 
         return (
             <FormGroup>
                 <Typography gutterBottom variant="headline" component="h2" noWrap>
-                    {this.props.label}
+                    {this.props.name}
                 </Typography>
                 {filters}
             </FormGroup>
@@ -47,8 +48,9 @@ class Facet extends React.Component {
 }
 
 Facet.propTypes = {
+    name: PropTypes.string.isRequired,
     filters: PropTypes.object.isRequired,
-    // activeFilters: PropTypes.object.isRequired
+    setFilter: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(Facet);

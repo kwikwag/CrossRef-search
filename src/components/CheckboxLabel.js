@@ -12,18 +12,23 @@ const styles = {
 };
 
 class CheckboxLabels extends React.Component {
+    handleChange = (e) => {
+        this.props.onChange(this.props.label, e.target.checked)
+    };
+
     render() {
         return (
             <FormControlLabel
                 control={
                     <Checkbox
                         checked={this.props.checked}
-                        onChange={this.props.handleChange}
+                        onChange={this.handleChange}
                         value={this.props.label}
                         color="primary"
                     />
                 }
-                label={<span>{this.props.label} <Typography style={{display: 'inline-block'}} component='span' color="textSecondary" variant='caption'>- ({this.props.count})</Typography></span>}
+                label={<span>{this.props.label}
+                    <Typography style={{display: 'inline-block'}} component='span' color="textSecondary" variant='caption'>- ({this.props.count})</Typography></span>}
             />
         );
     }
@@ -31,6 +36,9 @@ class CheckboxLabels extends React.Component {
 
 CheckboxLabels.propTypes = {
     classes: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    checked: PropTypes.bool,
+    label: PropTypes.string
 };
 
 export default withStyles(styles)(CheckboxLabels);

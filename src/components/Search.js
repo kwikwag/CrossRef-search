@@ -9,6 +9,7 @@ import {fade} from '@material-ui/core/styles/colorManipulator';
 import {withStyles} from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import FacetsList from "./FacetsList";
 
 const styles = theme => ({
     root: {
@@ -70,16 +71,19 @@ const styles = theme => ({
     },
 });
 
-class Nav extends Component {
+class Search extends Component {
 
     state = {
-        inputVal: ''
+        inputVal: '',
+        lastQuery: '',
+        activeFilters: {}
     };
 
-    constructor(props) {
-        super(props);
-        console.log(props);
-        this.handleKeyUp = this.handleKeyUp.bind(this)
+    setFilter = (facetName, filtersValues) => {
+        let activeFilters = {...this.state.activeFilters};
+        activeFilters[facetName] = {...filtersValues};
+        this.setState({activeFilters});
+        this.props.onSubmit(this.state.lastQuery, {filters: activeFilters})
     }
 
     handleChange = (e) => {
@@ -91,9 +95,9 @@ class Nav extends Component {
         //Submit on ENTER
         if (e.nativeEvent.keyCode === 13) {
             let query = e.target.value;
-            if (query && this.lastQuery !== query) {
-                this.lastQuery = query;
-                this.props.onSubmit(query)
+            if (query && this.state.lastQuery !== query) {
+                this.props.onSubmit(query);
+                this.setState({lastQuery: query});
             }
         }
     };
@@ -129,14 +133,16 @@ class Nav extends Component {
                         </div>
                     </Toolbar>
                 </AppBar>
+                <FacetsList facets={this.props.facets} setFilter={this.setFilter}/>
             </div>
         );
     }
 }
 
-Nav.propTypes = {
+Search.propTypes = {
     classes: PropTypes.object.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    facets: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Nav);
+export default withStyles(styles)(Search);

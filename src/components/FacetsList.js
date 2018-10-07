@@ -28,7 +28,7 @@ class FacetsList extends React.Component {
         let {classes} = this.props;
 
         let facets = _.map(this.props.facets, (val, key) => {
-            return (<Facet label={key} key={key} filters={val}/>)
+            return (<Facet name={key} key={key} filters={val} setFilter={this.props.setFilter}/>)
         });
 
         if (facets.length) {
