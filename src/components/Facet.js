@@ -27,7 +27,7 @@ class Facet extends React.Component {
     toggleFilter = (key, checked) => {
         let filterValues = {...this.state.filterValues};
         filterValues[key] = checked;
-        this.props.setFilter(this.props.name, filterValues)
+        this.props.setFilter(this.props.name, filterValues);
         this.setState({filterValues});
     };
 
@@ -39,7 +39,7 @@ class Facet extends React.Component {
         return (
             <FormGroup>
                 <Typography gutterBottom variant="headline" component="h2" noWrap>
-                    {this.props.name}
+                    {this.props.label}
                 </Typography>
                 {filters}
             </FormGroup>
@@ -49,8 +49,10 @@ class Facet extends React.Component {
 
 Facet.propTypes = {
     name: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
     filters: PropTypes.object.isRequired,
-    setFilter: PropTypes.func.isRequired
+    setFilter: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(Facet);

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import $ from "jquery";
 import _ from 'lodash'
+import LoadingOverlay from 'react-loading-overlay'
 
 import Search from '../components/Search'
 import ArticlesList from '../components/ArticlesList'
@@ -10,31 +11,40 @@ class App extends Component {
 
     state = {
         articles: [],
-        facets: {}
+        facets: {},
+        loading: false
     };
 
     search = (input, extraParams) => {
-        if (!extraParams) extraParams = {};
+        if (!this.state.loading) {
+            if (!extraParams) extraParams = {};
 
-        if (!extraParams.facets) extraParams.facets = {
-            published: 5,
-            'container-title': 5,
-            'type-name': 5
-        };
+            if (!extraParams.facets) extraParams.facets = {
+                published: 5,
+                'container-title': 5,
+                'type-name': 5
+            };
 
-        $.ajax({
-            type: "GET",
-            url: this.buildQuery(input, extraParams),
-            processData: false
-        }).then((res) => {
-            if (res && res.message && Array.isArray(res.message.items)) {
-                this.setState({articles: res.message.items, facets: res.message.facets});
-            } else {
-                console.log('Received faulty response from crossref', this)
-            }
-        }, (err) => {
-            debugger
-        });
+            this.setState({loading: true});
+
+            $.ajax({
+                type: "GET",
+                url: this.buildQuery(input, extraParams),
+                processData: false
+            }).then((res) => {
+                if (res && res.message && Array.isArray(res.message.items)) {
+                    this.setState({
+                        articles: res.message.items,
+                        facets: res.message.facets,
+                        loading: false
+                    });
+                } else {
+                    console.log('Received faulty response from crossref', this)
+                }
+            }, (err) => {
+                debugger
+            });
+        }
     };
 
     buildQuery(input, extraParams) {
@@ -82,8 +92,10 @@ class App extends Component {
         return (
             <React.Fragment>
                 <CssBaseline/>
-                <Search onSubmit={this.search} facets={this.state.facets}/>
-                <ArticlesList articles={this.state.articles}/>
+                <Search onSubmit={this.search} facets={this.state.facets} loading={this.state.loading}/>
+                <LoadingOverlay spinner active={this.state.loading} text='Searching...' >
+                    <ArticlesList articles={this.state.articles}/>
+                </LoadingOverlay>
             </React.Fragment>
         );
     }
