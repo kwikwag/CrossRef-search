@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {withStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import withPropsStyles from '../helpers/withPropsStyles'
 
@@ -12,7 +13,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 const styles = (props, theme) => ({
     root: {
         height: props.height ? props.height : '85%',
-        maxHeight: '100%',
+        maxHeight: '85%',
         overflow: 'auto',
         backgroundColor: theme.palette.background.paper,
         // transition: theme.transitions.create('height'),

@@ -46,7 +46,7 @@ class FacetsList extends React.Component {
 
     componentDidUpdate = () => {
         this.handleChange()
-    };
+    }
 
     render() {
 

@@ -131,6 +131,10 @@ class Search extends Component {
         this.setViewPort();
     };
 
+    shouldComponentUpdate = (nextProps, nextState) => {
+        return nextProps.facets !== this.props.facets || nextProps.loading !== this.props.loading || nextState.inputVal !== this.state.inputVal || nextState.activeFilters !== this.state.activeFilters
+    }
+
     setViewPort() {
         this.props.setViewPort(this.rootElem.current.clientHeight)
     }
