@@ -8,24 +8,26 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-const styles = {
+const styles = (theme) => ({
     card: {
-        width: '100%'
+        width: '100%',
+        marginTop: theme.spacing.unit,
+        marginBottom: theme.spacing.unit
     },
     media: {
         // ⚠️ object-fit is not supported by IE11.
         objectFit: 'cover',
     },
-};
+});
 
 class Article extends Component {
     render() {
         const classes = this.props.classes;
         return (
-            <Card className={classes.card}>
+            <Card className={classes.card} raised>
                 <CardActionArea className={classes.card}>
                     <CardContent className={classes.card}>
-                        <Typography gutterBottom variant="headline" component="h2" noWrap>
+                        <Typography gutterBottom variant="h5" component="h2" noWrap>
                             {this.props.article.title}
                         </Typography>
                         <Typography color="textSecondary" variant='subheading' component="div" noWrap>

@@ -3,9 +3,25 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import $ from "jquery";
 import _ from 'lodash'
 import LoadingOverlay from 'react-loading-overlay'
+import {withStyles} from "@material-ui/core/styles";
 
 import Search from '../components/Search'
 import ArticlesList from '../components/ArticlesList'
+
+const styles = {
+    overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 999
+    },
+    articlesList: {
+        height: '100%',
+        width: '100%'
+    }
+};
 
 class App extends Component {
 
@@ -88,17 +104,25 @@ class App extends Component {
 
     }
 
+    setViewPort = (controlsHeight) => {
+        this.setState({viewPort: document.getElementById('app-root').clientHeight - controlsHeight})
+    };
+
     render() {
+        const {classes} = this.props;
+
         return (
             <React.Fragment>
                 <CssBaseline/>
-                <Search onSubmit={this.search} facets={this.state.facets} loading={this.state.loading}/>
-                <LoadingOverlay spinner active={this.state.loading} text='Searching...' >
-                    <ArticlesList articles={this.state.articles}/>
+                {/*<Grid direction="column" container={true} justify='space-around' alignContent='flex-start' alignItems='flex-start'>*/}
+                <LoadingOverlay  active={this.state.loading} spinner text='Loading...'>
+                    <Search onSubmit={this.search} facets={this.state.facets} loading={this.state.loading} setViewPort={this.setViewPort}/>
+                    <ArticlesList className={classes.articlesList} height={this.state.viewPort} articles={this.state.articles}/>
                 </LoadingOverlay>
+                {/*</Grid>*/}
             </React.Fragment>
         );
     }
 }
 
-export default App;
+export default withStyles(styles)(App);

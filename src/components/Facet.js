@@ -38,7 +38,7 @@ class Facet extends React.Component {
 
         return (
             <FormGroup>
-                <Typography gutterBottom variant="headline" component="h2" noWrap>
+                <Typography gutterBottom variant="h5" component="h2" noWrap>
                     {this.props.label}
                 </Typography>
                 {filters}
@@ -52,7 +52,7 @@ Facet.propTypes = {
     label: PropTypes.string.isRequired,
     filters: PropTypes.object.isRequired,
     setFilter: PropTypes.func.isRequired,
-    loading: PropTypes.bool.isRequired
+    // loading: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(Facet);

@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button/Button";
 const styles = theme => ({
     root: {
         width: '100%',
+        height: 'auto'
     },
     grow: {
         flexGrow: 1,
@@ -85,11 +86,19 @@ const styles = theme => ({
 
 class Search extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.setViewPort = this.setViewPort.bind(this)
+    }
+
     state = {
         inputVal: '',
         lastQuery: '',
         activeFilters: {}
     };
+
+    rootElem = React.createRef();
 
     setFilter = (facetName, filtersValues) => {
         let activeFilters = {...this.state.activeFilters};
@@ -118,13 +127,21 @@ class Search extends Component {
         !this.props.loading && this.state.inputVal && this.props.onSubmit(this.state.inputVal, {filters: this.state.activeFilters})
     };
 
+    componentDidMount() {
+        this.setViewPort();
+    };
+
+    setViewPort() {
+        this.props.setViewPort(this.rootElem.current.clientHeight)
+    }
+
     render() {
         const {classes, loading} = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar position="static">
+            <div className={classes.root} ref={this.rootElem}>
+                <AppBar position="sticky">
                     <Toolbar>
-                        <Typography className={classes.title} variant="title" color="inherit" noWrap>
+                        <Typography className={classes.title} variant="h5" color="inherit" noWrap>
                             CrossRef search
                         </Typography>
                         {/*<div className={classes.grow}/>*/}
@@ -148,7 +165,7 @@ class Search extends Component {
                         {/*<div className={classes.grow}/>*/}
                     </Toolbar>
                 </AppBar>
-                <FacetsList facets={this.props.facets} setFilter={this.setFilter} search={this.search} loading={loading}/>
+                <FacetsList facets={this.props.facets} setFilter={this.setFilter} search={this.search} loading={loading} setViewPort={this.setViewPort }/>
             </div>
         );
     }
