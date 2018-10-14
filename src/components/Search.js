@@ -95,7 +95,11 @@ class Search extends Component {
     state = {
         inputVal: '',
         lastQuery: '',
-        activeFilters: {}
+        activeFilters: {},
+        sorting: {
+            value: '',
+            order: 'asc'
+        }
     };
 
     rootElem = React.createRef();
@@ -106,6 +110,11 @@ class Search extends Component {
         this.setState({activeFilters});
         // this.props.onSubmit(this.state.lastQuery, {filters: activeFilters})
     }
+
+    setSorting = (sortingObj) => {
+        let newSortingObj = {...this.state.sorting,...sortingObj};
+        this.setState({sorting: newSortingObj})
+    };
 
     handleChange = (e) => {
         let inputVal = e.target.value;
@@ -124,19 +133,19 @@ class Search extends Component {
     };
 
     search = () => {
-        !this.props.loading && this.state.inputVal && this.props.onSubmit(this.state.inputVal, {filters: this.state.activeFilters})
+        !this.props.loading && this.state.inputVal && this.props.onSubmit(this.state.inputVal, {filters: this.state.activeFilters, sorting: this.state.sorting})
     };
 
     componentDidMount() {
-        this.setViewPort();
+        this.setViewPort(true);
     };
 
     shouldComponentUpdate = (nextProps, nextState) => {
-        return nextProps.facets !== this.props.facets || nextProps.loading !== this.props.loading || nextState.inputVal !== this.state.inputVal || nextState.activeFilters !== this.state.activeFilters
+        return nextProps.facets !== this.props.facets || nextProps.loading !== this.props.loading || nextState.inputVal !== this.state.inputVal || nextState.activeFilters !== this.state.activeFilters || nextState.sorting !== this.state.sorting
     }
 
-    setViewPort() {
-        this.props.setViewPort(this.rootElem.current.clientHeight)
+    setViewPort(firstRun) {
+        this.props.setViewPort(this.rootElem.current.clientHeight, firstRun)
     }
 
     render() {
@@ -148,11 +157,9 @@ class Search extends Component {
                         <Typography className={classes.title} variant="h5" color="inherit" noWrap>
                             CrossRef search
                         </Typography>
-                        {/*<div className={classes.grow}/>*/}
                         <div className={classes.search}>
                             <Button onClick={this.search} className={classes.searchIcon} disabled={loading}>
                                 <SearchIcon/>
-                                {/*{loading && <CircularProgress size={24} className={classes.searchProgress}/>}*/}
                             </Button>
                             <Input
                                 placeholder="Search…"
@@ -166,10 +173,9 @@ class Search extends Component {
                                 value={this.state.inputVal}
                             />
                         </div>
-                        {/*<div className={classes.grow}/>*/}
                     </Toolbar>
                 </AppBar>
-                <FacetsList facets={this.props.facets} setFilter={this.setFilter} search={this.search} loading={loading} setViewPort={this.setViewPort }/>
+                <FacetsList facets={this.props.facets} setFilter={this.setFilter} search={this.search} sorting={this.state.sorting} setSorting={this.setSorting} loading={loading} setViewPort={this.setViewPort} />
             </div>
         );
     }

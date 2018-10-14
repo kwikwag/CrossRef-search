@@ -2,67 +2,75 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import withPropsStyles from '../helpers/withPropsStyles'
 
 import dataParser from '../helpers/dataParser'
 import Article from "./Article";
 import Typography from "@material-ui/core/Typography/Typography";
 import Paper from "@material-ui/core/Paper/Paper";
 import Grid from "@material-ui/core/Grid/Grid";
+import TablePagination from "@material-ui/core/TablePagination/TablePagination";
+import LoadingOverlay from "react-loading-overlay";
 
-const styles = (props, theme) => ({
+const styles = (theme) => ({
     root: {
-        height: props.height ? props.height : '85%',
-        maxHeight: '85%',
+        maxHeight: '85%%',
         overflow: 'auto',
         backgroundColor: theme.palette.background.paper,
-        // transition: theme.transitions.create('height'),
-        // [theme.breakpoints.up('sm')]: {
-        //     width: 120,
-        //     '&:focus': {
-        //         width: 200,
-        //     },
-        },
-        container: {
-            height: 'auto',
-            overflow: 'auto'
+    },
+    container: {
+        height: 'auto',
+        overflow: 'auto'
 
-        },
-        emptyMsg: {
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            position: 'absolute'
-        }
-    });
+    },
+    emptyMsg: {
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+        position: 'absolute'
+    }
+});
 
-function ArticlesList(props) {
-    const {classes} = props;
+class ArticlesList extends React.Component {
+    state = {
+        itemsPerPage: 5,
+        currentPage: 0
+    };
 
-    // if (height) classes.root.height = height;
+    setPage = (e, pageNumber) => {
+        this.props.setPage(pageNumber);
+        this.setState({currentPage: pageNumber})
+    };
 
-    let listItems = props.articles.map((article) => {
-        let parsedArticle = dataParser.parseArticle(article);
-        return (<Article key={parsedArticle.doi} article={parsedArticle}/>)
-    });
+    render() {
+        const {classes, height} = this.props;
 
-    let list = <List>{listItems}</List>;
-    let msg = <Typography className={classes.emptyMsg} variant='h5' color='textSecondary'>Empty...</Typography>;
+        // if (height) classes.root.height = height;
 
-    let renderItem = listItems.length ? list : msg;
+        let listItems = this.props.articles.map((article) => {
+            let parsedArticle = dataParser.parseArticle(article);
+            return (<Article key={parsedArticle.doi} article={parsedArticle}/>)
+        });
 
-    return (
-        <Grid className={classes.root} direction="column" container={true} justify='space-between' alignContent='stretch' alignItems='stretch'>
-            <Paper className={classes.container} elevation={1}>
-                {renderItem}
-            </Paper>
-        </Grid>
-    );
+        let list = <List>{listItems}</List>;
+        let msg = <Typography className={classes.emptyMsg} variant='h5' color='textSecondary'>Empty...</Typography>;
+
+        let renderItem = listItems.length ? list : msg;
+
+        return (
+            <Grid className={classes.root} style={{height: height ? height : '85%'}} direction="column" container={true} justify='space-between' alignContent='stretch' alignItems='stretch'>
+                <Paper className={classes.container} elevation={1}>
+                    {renderItem}
+                </Paper>
+                <TablePagination component='div' count={this.props.totalResults / this.state.itemsPerPage} onChangePage={this.setPage} page={this.state.currentPage} rowsPerPage={this.state.itemsPerPage}/>
+            </Grid>
+        );
+    }
 }
 
 ArticlesList.propTypes = {
     classes: PropTypes.object.isRequired,
-    articles: PropTypes.array.isRequired
+    articles: PropTypes.array.isRequired,
+    totalResults: PropTypes.number.isRequired
 };
 
-export default withPropsStyles(styles)(ArticlesList);
+export default withStyles(styles)(ArticlesList);

@@ -7,10 +7,13 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
 import {withStyles} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid/Grid";
+import Divider from '@material-ui/core/Divider';
+
 import _ from 'lodash'
 
 import Facet from './Facet'
 import Button from "@material-ui/core/Button/Button";
+import QuerySort from './QuerySort'
 
 const styles = theme => ({
     root: {
@@ -26,6 +29,11 @@ const styles = theme => ({
         top: '50%',
         transform: 'translate(-50%, -50%)',
         position: 'absolute'
+    },
+    divider: {
+        width: '100%',
+        marginBottom: theme.spacing.unit,
+        marginTop: theme.spacing.unit
     }
 });
 
@@ -54,9 +62,11 @@ class FacetsList extends React.Component {
 
         let facetsList = (() => {
             let facets = _.map(this.props.facets, (val, key) => {
-                return (<Facet name={key} label={this.labels[key]} key={key} filters={val} setFilter={this.props.setFilter}/>)
+                return (
+                    <Facet name={key} label={this.labels[key]} key={key} filters={val} setFilter={this.props.setFilter}/>)
             });
-            return facets.length ? facets : <Typography variant='h5' color='textSecondary' >No filters yet...</Typography>
+            return facets.length ? facets :
+                <Typography variant='h5' color='textSecondary'>No filters yet...</Typography>
         })();
 
         // if (facets.length) {
@@ -67,9 +77,11 @@ class FacetsList extends React.Component {
                         <Typography className={classes.heading}>Filters</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
-                        <Grid direction="row" container={true} alignContent='stretch' alignItems='stretch' justify="space-around">
+                        <Grid direction="row" container alignContent='stretch' alignItems='stretch' justify="space-around">
                             {facetsList}
-                            <Grid direction="column" container={true} alignContent='stretch' alignItems='flex-end'>
+                            <Divider light className={classes.divider}/>
+                            <Grid direction="row" container alignContent='flex-start' alignItems='flex-end' justify='space-between'>
+                                <QuerySort current={this.props.sorting} handleChange={this.props.setSorting}/>
                                 <Button className={classes.fab} onClick={this.props.search} color='primary' variant='contained' disabled={this.props.loading}>
                                     SEARCH
                                 </Button>
@@ -86,7 +98,9 @@ FacetsList.propTypes = {
     classes: PropTypes.object.isRequired,
     facets: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
-    setViewPort: PropTypes.func
+    setViewPort: PropTypes.func,
+    sorting: PropTypes.object.isRequired,
+    setSorting: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(FacetsList);
