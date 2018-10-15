@@ -4,8 +4,6 @@ import $ from "jquery";
 import _ from 'lodash'
 import LoadingOverlay from 'react-loading-overlay'
 import {withStyles} from "@material-ui/core/styles";
-import TablePagination from '@material-ui/core/TablePagination';
-
 
 import Search from '../components/Search'
 import ArticlesList from '../components/ArticlesList'
@@ -36,7 +34,7 @@ class App extends Component {
             input: '',
             extraParams: {
                 itemsPerPage: 5,
-                currentPage: 0
+                currentOffset: 0
             }
         }
     };
@@ -86,7 +84,7 @@ class App extends Component {
     buildQuery(input, extraParams) {
         let baseUrl = 'https://api.crossref.org/works?';
 
-        let paginationQuery = 'rows=' + extraParams.itemsPerPage + '&offset=' + extraParams.currentPage * extraParams.itemsPerPage;
+        let paginationQuery = 'rows=' + extraParams.itemsPerPage + '&offset=' + extraParams.currentOffset;
 
         let facetsQuery = '';
         if (extraParams.facets) {
@@ -134,8 +132,8 @@ class App extends Component {
         (firstRun || this.state.articles.length) && this.setState({viewPort: document.getElementById('app-root').clientHeight - controlsHeight})
     };
 
-    setPage = (pageNumber) => {
-        this.search(null, {currentPage: pageNumber})
+    setOffset = (offset) => {
+        this.search(null, {currentOffset: offset})
     };
 
     render() {
@@ -144,9 +142,9 @@ class App extends Component {
         return (
             <React.Fragment>
                 <CssBaseline/>
-                <LoadingOverlay  active={this.state.loading} spinner text='Loading...'>
+                <LoadingOverlay active={this.state.loading} spinner text='Loading...'>
                     <Search onSubmit={this.search} facets={this.state.facets} loading={this.state.loading} setViewPort={this.setViewPort}/>
-                    <ArticlesList className={classes.articlesList} height={this.state.viewPort} articles={this.state.articles} totalResults={this.state.totalResults} setPage={this.setPage}/>
+                    <ArticlesList className={classes.articlesList} height={this.state.viewPort} articles={this.state.articles} totalResults={this.state.totalResults} setOffset={this.setOffset}/>
                 </LoadingOverlay>
             </React.Fragment>
         );

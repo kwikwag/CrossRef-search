@@ -8,8 +8,8 @@ import Article from "./Article";
 import Typography from "@material-ui/core/Typography/Typography";
 import Paper from "@material-ui/core/Paper/Paper";
 import Grid from "@material-ui/core/Grid/Grid";
-import TablePagination from "@material-ui/core/TablePagination/TablePagination";
-import LoadingOverlay from "react-loading-overlay";
+import Pagination from "material-ui-flat-pagination";
+
 
 const styles = (theme) => ({
     root: {
@@ -27,18 +27,21 @@ const styles = (theme) => ({
         top: '50%',
         transform: 'translate(-50%, -50%)',
         position: 'absolute'
+    },
+    pagination: {
+        margin: theme.spacing.unit
     }
 });
 
 class ArticlesList extends React.Component {
     state = {
         itemsPerPage: 5,
-        currentPage: 0
+        currentOffset: 0
     };
 
-    setPage = (e, pageNumber) => {
-        this.props.setPage(pageNumber);
-        this.setState({currentPage: pageNumber})
+    setOffset = (e, offset) => {
+        this.props.setOffset(offset);
+        this.setState({currentOffset: offset})
     };
 
     render() {
@@ -51,7 +54,22 @@ class ArticlesList extends React.Component {
             return (<Article key={parsedArticle.doi} article={parsedArticle}/>)
         });
 
-        let list = <List>{listItems}</List>;
+        let list = (
+            <div>
+                <List>
+                    {listItems}
+                </List>
+                <Pagination
+                    className={classes.pagination}
+                    limit={this.state.itemsPerPage}
+                    offset={this.state.currentOffset}
+                    total={this.props.totalResults}
+                    onClick={this.setOffset}
+                    size='large'
+                />
+            </div>
+
+        );
         let msg = <Typography className={classes.emptyMsg} variant='h5' color='textSecondary'>Empty...</Typography>;
 
         let renderItem = listItems.length ? list : msg;
@@ -61,7 +79,6 @@ class ArticlesList extends React.Component {
                 <Paper className={classes.container} elevation={1}>
                     {renderItem}
                 </Paper>
-                <TablePagination component='div' count={this.props.totalResults / this.state.itemsPerPage} onChangePage={this.setPage} page={this.state.currentPage} rowsPerPage={this.state.itemsPerPage}/>
             </Grid>
         );
     }
