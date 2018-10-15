@@ -108,7 +108,7 @@ class App extends Component {
                         } else if (facetName === 'type-name') {
                             filtersQuery = filtersQuery + 'type:' + filterName.toLowerCase().replace(' ', '-') + ','
                         } else {
-                            filtersQuery = filtersQuery + facetName + ':' + filterName + ','
+                            filtersQuery = filtersQuery + facetName + ':' + encodeURIComponent(filterName) + ','
                         }
                     }
                 })

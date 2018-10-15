@@ -18,7 +18,7 @@ import QuerySort from './QuerySort'
 const styles = theme => ({
     root: {
         width: '100%',
-        borderBottom: '1px solid'
+        borderBottom: '1px solid gray'
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
